@@ -1,0 +1,3135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Roulette Bet Game</title>
+
+<style>
+
+/* NAME INPUT */
+.name-box{
+
+  display:flex;
+  gap:10px;
+
+  margin-left:20px;
+}
+
+.name-box input{
+
+  padding:10px 15px;
+
+  border:none;
+  border-radius:10px;
+
+  background:#1b2134;
+
+  color:white;
+
+  font-size:16px;
+}
+
+.name-box button{
+
+  padding:10px 18px;
+
+  border:none;
+  border-radius:10px;
+
+  background:#6d28ff;
+
+  color:white;
+
+  font-weight:bold;
+
+  cursor:pointer;
+}
+
+/* FLOATING PROMO BUTTON */
+.promo-floating{
+  position:absolute;
+  bottom:20px;
+  left:20px;
+
+  padding:14px 20px;
+
+  border:none;
+  border-radius:14px;
+
+  background:#f59e0b;
+
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+
+  cursor:pointer;
+
+  box-shadow:0 0 15px rgba(0,0,0,0.4);
+
+  transition:0.2s;
+
+  z-index:1000;
+}
+
+.promo-floating:hover{
+  transform:scale(1.05);
+}
+
+/* POPUP BG */
+.promo-popup-bg{
+  position:fixed;
+  top:0;
+  left:0;
+
+  width:100%;
+  height:100%;
+
+  background:rgba(0,0,0,0.7);
+
+  display:none;
+
+  justify-content:center;
+  align-items:center;
+
+  z-index:2000;
+}
+
+/* POPUP */
+.promo-popup{
+  width:400px;
+
+  background:#121728;
+
+  border-radius:20px;
+
+  padding:30px;
+
+  text-align:center;
+
+  border:2px solid #232a45;
+
+  animation:popupShow 0.25s ease;
+}
+
+@keyframes popupShow{
+  from{
+    transform:scale(0.7);
+    opacity:0;
+  }
+
+  to{
+    transform:scale(1);
+    opacity:1;
+  }
+}
+
+.promo-title{
+  font-size:28px;
+  font-weight:bold;
+  margin-bottom:25px;
+}
+
+.promo-input{
+  width:100%;
+
+  padding:16px;
+
+  border:none;
+  border-radius:12px;
+
+  background:#1b2134;
+
+  color:white;
+
+  font-size:18px;
+
+  margin-bottom:20px;
+}
+
+.promo-claim-btn,
+.promo-close-btn{
+
+  width:100%;
+
+  padding:15px;
+
+  border:none;
+  border-radius:12px;
+
+  color:white;
+
+  font-size:18px;
+  font-weight:bold;
+
+  cursor:pointer;
+
+  margin-top:10px;
+}
+
+.promo-claim-btn{
+  background:#16a34a;
+}
+
+.promo-close-btn{
+  background:#dc2626;
+}
+
+.bet-controls{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.bet-controls button{
+  flex:1;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#1b2134;
+  color:white;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.bet-controls button:hover{
+  background:#2a3350;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#0f1320;
+  color:white;
+  overflow:hidden;
+}
+
+/* TOPBAR */
+.topbar{
+  gap:20px;
+  width:100%;
+  height:60px;
+  background:#111526;
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  padding:0 20px;
+  border-bottom:2px solid #1d2338;
+}
+
+.logo{
+  cursor:pointer;
+transition:0.2s;
+  font-size:45px;
+  font-weight:bold;
+  font-family:cursive;
+  .logo:hover{
+
+  transform:scale(1.05);
+
+  color:#a855f7;
+}
+}
+
+.balance{
+  background:#1b2134;
+  padding:10px 20px;
+  border-radius:12px;
+  font-size:20px;
+  font-weight:bold;
+}
+
+/* MAIN */
+.main{
+  display:none;
+  height:calc(100vh - 60px);
+}
+/* LEFT PANEL */
+.sidebar{
+  width:320px;
+  background:#121728;
+  padding:20px;
+  border-right:4px solid #33406b;
+}
+
+.tabs{
+  display:flex;
+  background:#1b2134;
+  border-radius:15px;
+  overflow:hidden;
+  margin-bottom:30px;
+}
+
+.tab{
+  flex:1;
+  padding:14px;
+  text-align:center;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+.active{
+  background:#6d28ff;
+}
+
+.label{
+  margin-bottom:12px;
+  color:#bbb;
+  font-size:14px;
+}
+
+.bet-input{
+  border:3px solid #313d66;
+  width:100%;
+  padding:15px;
+  border:none;
+  border-radius:12px;
+  background:#1b2134;
+  color:white;
+  font-size:20px;
+  margin-bottom:25px;
+}
+
+.bet-btn{
+  width:100%;
+  padding:18px;
+  border:none;
+  border-radius:14px;
+  background:#6d28ff;
+  color:white;
+  font-size:22px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.bet-btn:hover{
+  background:#7c3aed;
+}
+
+/* GAME AREA */
+.game-area{
+  flex:1;
+  padding:20px;
+  position:relative;
+}
+
+/* HISTORY */
+.history{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.history-box{
+  border:3px solid #33406b;
+  min-width:90px;
+  padding:12px;
+  text-align:center;
+  border-radius:10px;
+  font-weight:bold;
+  background:#1b2134;
+}
+
+.green{
+  background:#00c853;
+}
+
+/* GAME */
+.game-box{
+  width:100%;
+  height:80vh;
+  background:#121728;
+  border-radius:18px;
+
+  border:4px solid #2f3a63;
+
+  box-shadow:
+  0 0 25px rgba(109,40,255,0.3);
+
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* SCORE */
+.score-container{
+  position:absolute;
+  width:100%;
+  display:flex;
+  justify-content:space-around;
+  top:50%;
+  transform:translateY(-50%);
+}
+
+.score-box{
+  width:140px;
+  height:140px;
+  border:6px solid #58638f;
+  border-radius:18px;
+  background:#151b2d;
+box-shadow:
+0 0 20px rgba(88,99,143,0.4);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
+
+.score-title{
+  margin-bottom:10px;
+  font-size:28px;
+}
+
+.score-number{
+  font-size:70px;
+  font-weight:bold;
+}
+
+/* ROULETTE */
+.roulette-wrapper{
+  position:relative;
+  width:420px;
+  height:420px;
+}
+
+.pointer{
+  position:absolute;
+  top:-10px;
+  left:50%;
+  transform:translateX(-50%);
+
+  width:0;
+  height:0;
+
+  border-left:18px solid transparent;
+  border-right:18px solid transparent;
+  border-top:35px solid #ffd700;
+
+  z-index:1000;
+}
+
+canvas{
+  border:8px solid #58638f;
+
+box-shadow:
+0 0 35px rgba(88,99,143,0.5);
+  width:100%;
+  height:100%;
+  border-radius:50%;
+}
+
+.result-text{
+  position:absolute;
+
+  bottom:90px;
+
+  left:50%;
+
+  transform:translateX(-50%);
+
+  text-align:center;
+
+  font-size:32px;
+
+  font-weight:bold;
+
+  width:auto;
+}
+
+.win{
+  color:#00ff99;
+}
+
+.lose{
+  color:#ff3b3b;
+}
+
+/* PROFILE */
+.profile-box{
+
+  background:#1b2134;
+
+  padding:12px 20px;
+
+  border-radius:14px;
+
+  margin-left:20px;
+
+  min-width:220px;
+}
+
+.profile-name{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.profile-level{
+  margin-top:5px;
+  color:#ffd700;
+  font-weight:bold;
+}
+
+.xp-bar{
+
+  width:100%;
+  height:12px;
+
+  background:#111526;
+
+  border-radius:10px;
+
+  overflow:hidden;
+
+  margin-top:10px;
+}
+
+.xp-fill{
+
+  width:0%;
+
+  height:100%;
+
+  background:#00c853;
+
+  transition:0.3s;
+}
+
+.xp-text{
+  margin-top:8px;
+  font-size:14px;
+  color:#bbb;
+}
+
+/* FAST SPIN TOGGLE */
+.fastspin-container{
+
+  margin-top:15px;
+
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+
+  background:#1b2134;
+
+  padding:14px;
+
+  border-radius:14px;
+
+  font-weight:bold;
+}
+
+.fast-toggle{
+
+  width:70px;
+  height:36px;
+
+  background:#374151;
+
+  border-radius:30px;
+
+  position:relative;
+
+  cursor:pointer;
+
+  transition:0.3s;
+}
+
+.fast-circle{
+
+  width:28px;
+  height:28px;
+
+  background:white;
+
+  border-radius:50%;
+
+  position:absolute;
+
+  top:4px;
+  left:4px;
+
+  transition:0.3s;
+}
+
+/* ON MODE */
+.fast-toggle.active{
+  background:#16a34a;
+}
+
+.fast-toggle.active .fast-circle{
+  left:38px;
+}
+
+/* HOME PAGE */
+.casino-home{
+
+  width:100%;
+  height:100vh;
+
+  background:#0f1320;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+  align-items:center;
+
+  padding:40px;
+}
+
+.home-title{
+
+  font-size:70px;
+
+  font-weight:bold;
+
+  margin-bottom:40px;
+
+  color:white;
+}
+
+/* BIG CARD */
+.roulette-home-card{
+
+  width:900px;
+
+  height:400px;
+
+  background:
+  linear-gradient(
+    135deg,
+    #1e1b4b,
+    #6d28ff
+  );
+
+  border-radius:30px;
+
+  border:4px solid #7c3aed;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+  align-items:center;
+
+  text-align:center;
+
+  cursor:pointer;
+
+  transition:0.3s;
+
+  box-shadow:
+  0 0 40px rgba(109,40,255,0.4);
+}
+
+.roulette-home-card:hover{
+
+  transform:translateY(-8px);
+
+  box-shadow:
+  0 0 60px rgba(109,40,255,0.6);
+}
+
+.roulette-big-icon{
+
+  font-size:120px;
+
+  margin-bottom:20px;
+}
+
+.roulette-home-title{
+
+  font-size:70px;
+
+  font-weight:bold;
+}
+
+.roulette-home-sub{
+
+  margin-top:10px;
+
+  font-size:26px;
+
+  color:#ddd;
+}
+
+.play-now-btn{
+
+  margin-top:30px;
+
+  padding:18px 40px;
+
+  border:none;
+  border-radius:16px;
+
+  background:#16a34a;
+
+  color:white;
+
+  font-size:24px;
+  font-weight:bold;
+
+  cursor:pointer;
+}
+
+</style>
+</head>
+<body>
+
+<!-- TOP -->
+<div class="topbar">
+
+  <div
+class="logo"
+onclick="goHome()">
+
+  YazzBet
+
+</div>
+
+<div class="name-box">
+
+  <input
+  type="text"
+  id="nameInput"
+  placeholder="Masukkan nama">
+
+  <button onclick="saveName()">
+    SAVE
+  </button>
+
+</div>
+
+  <div class="balance">
+    💰 Balance:
+    $<span id="balance">1000</span>
+  </div>
+
+</div>
+
+<div class="profile-box">
+
+  <div class="profile-name" id="usernameText">
+    Guest
+  </div>
+
+  <div class="profile-level">
+    LVL <span id="levelText">1</span>
+  </div>
+
+  <div class="xp-bar">
+
+    <div
+    class="xp-fill"
+    id="xpFill">
+    </div>
+
+  </div>
+
+  <div class="xp-text">
+    XP:
+    <span id="xpText">0</span>
+    /
+    <span id="xpNeed">100</span>
+  </div>
+
+</div>
+
+<!-- MAIN -->
+
+<!-- HOME PAGE -->
+<div class="casino-home">
+
+  <!-- TITLE -->
+  <div class="home-title">
+    Original
+  </div>
+
+  <!-- BIG CARD -->
+  <div
+  class="roulette-home-card"
+  onclick="startRoulette()">
+
+    <div class="roulette-big-icon">
+      🎡
+    </div>
+
+    <div class="roulette-home-title">
+      ROULETTE
+    </div>
+
+    <div class="roulette-home-sub">
+      Play the best roulette game
+    </div>
+
+    <button class="play-now-btn">
+      PLAY NOW
+    </button>
+
+  </div>
+
+</div>
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="label">
+      BET AMOUNT
+    </div>
+
+    <input
+    type="number"
+    id="betAmount"
+    class="bet-input"
+    value="50">
+
+<div class="bet-controls">
+
+  <button onclick="halfBet()">
+    1/2
+  </button>
+
+  <button onclick="doubleBet()">
+    x2
+  </button>
+
+  <button onclick="maxBet()">
+    MAX
+  </button>
+
+</div>
+
+<div class="fastspin-container">
+
+  <span>
+    FAST SPIN
+  </span>
+
+  <div
+  class="fast-toggle"
+  id="fastToggle"
+  onclick="toggleFastSpin()">
+
+    <div class="fast-circle"></div>
+
+  </div>
+
+</div>
+
+    <button
+    class="bet-btn"
+    onclick="spinWheel()">
+
+      BET
+
+    </button>
+
+  </div>
+
+  <!-- PROMO BUTTON -->
+<button class="promo-floating"
+onclick="openPromo()">
+
+  🎁 Promo Code
+
+</button>
+
+<!-- POPUP -->
+<div class="promo-popup-bg"
+id="promoPopup">
+
+  <div class="promo-popup">
+
+    <div class="promo-title">
+      🎁 CLAIM PROMO
+    </div>
+
+    <input
+    type="text"
+    id="promoInput"
+    class="promo-input"
+    placeholder="Masukkan promo code">
+
+    <button
+    class="promo-claim-btn"
+    onclick="claimPromo()">
+
+      CLAIM
+
+    </button>
+
+    <button
+    class="promo-close-btn"
+    onclick="closePromo()">
+
+      CLOSE
+
+    </button>
+
+  </div>
+
+</div>
+
+  <!-- GAME -->
+  <div class="game-area">
+
+    <!-- HISTORY -->
+    <div class="history" id="history"></div>
+
+    <!-- GAME BOX -->
+    <div class="game-box">
+
+      <!-- SCORE -->
+      <div class="score-container">
+
+        <div>
+
+          <div class="score-title">
+            YOU
+          </div>
+
+          <div class="score-box">
+
+            <div
+            class="score-number"
+            id="playerScore">
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- ROULETTE -->
+        <div class="roulette-wrapper">
+
+          <div class="pointer"></div>
+
+          <canvas
+          id="wheel"
+          width="420"
+          height="420">
+          </canvas>
+
+        </div>
+
+        <div>
+
+          <div class="score-title">
+            HOUSE
+          </div>
+
+          <div class="score-box">
+
+            <div
+            class="score-number"
+            id="houseScore">
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- RESULT -->
+      <div
+      class="result-text"
+      id="resultText">
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+  
+// OPEN GAME
+function startRoulette(){
+
+  document.querySelector(
+    ".casino-home"
+  ).style.display = "none";
+
+  document.querySelector(
+    ".main"
+  ).style.display = "flex";
+}
+
+// BACK HOME
+function goHome(){
+
+  document.querySelector(
+    ".casino-home"
+  ).style.display = "flex";
+
+  document.querySelector(
+    ".main"
+  ).style.display = "none";
+}
+
+// BACK TO HOME
+function goHome(){
+
+  document.querySelector(
+    ".casino-home"
+  ).style.display = "block";
+
+  document.querySelector(
+    ".main"
+  ).style.display = "none";
+}
+
+const canvas =
+document.getElementById("wheel");
+
+const ctx =
+canvas.getContext("2d");
+
+const playerScore =
+document.getElementById("playerScore");
+
+const houseScore =
+document.getElementById("houseScore");
+
+const resultText =
+document.getElementById("resultText");
+
+const balanceText =
+document.getElementById("balance");
+
+const historyDiv =
+document.getElementById("history");
+
+let balance =
+localStorage.getItem("rouletteBalance")
+? Number(localStorage.getItem("rouletteBalance"))
+: 1000;
+
+// ACCOUNT
+let username =
+localStorage.getItem("rouletteUsername")
+|| "Guest";
+
+// DATABASE PLAYER
+let players =
+JSON.parse(
+  localStorage.getItem("roulettePlayers")
+) || {};
+
+let level =
+Number(
+  localStorage.getItem("rouletteLevel")
+) || 1;
+
+let xp =
+Number(
+  localStorage.getItem("rouletteXP")
+) || 0;
+
+// TOTAL USER
+let totalUsers =
+localStorage.getItem("totalUsers")
+? Number(localStorage.getItem("totalUsers"))
+: 0;
+
+// USER PERTAMA KALI
+if(!localStorage.getItem("joined")){
+
+  totalUsers++;
+
+  localStorage.setItem(
+    "totalUsers",
+    totalUsers
+  );
+
+  localStorage.setItem(
+    "joined",
+    "yes"
+  );
+}
+
+balanceText.innerHTML = balance;
+document.getElementById(
+  "usernameText"
+).innerHTML = username;
+
+updateLevelUI();
+
+let spinning = false;
+let fastSpin = false;
+
+let rotation = 0;
+let playerWinnerNumber = 0;
+let houseWinnerNumber = 0;
+
+let historyData =
+localStorage.getItem("rouletteHistory")
+? JSON.parse(
+    localStorage.getItem("rouletteHistory")
+  )
+: [
+    "2.00x",
+    "3.00x",
+    "5.00x",
+    "1.00x"
+  ];
+  
+
+renderHistory();
+
+function renderHistory(){
+
+  localStorage.setItem(
+    "rouletteHistory",
+    JSON.stringify(historyData)
+  );
+
+  historyDiv.innerHTML = "";
+
+  historyData.forEach(item=>{
+
+    const div =
+    document.createElement("div");
+
+    div.className =
+    parseFloat(item) >= 2
+    ? "history-box green"
+    : "history-box";
+
+    div.innerHTML = item;
+
+    historyDiv.appendChild(div);
+  });
+}
+
+// NUMBERS
+const wheelNumbers = [
+  0,32,15,19,4,21,2,25,17,34,
+  6,27,13,36,11,30,8,23,10,5,
+  24,16,33,1,20,14,31,9,22,18,
+  29,7,28,12,35,3,26
+];
+
+const redNumbers = [
+  1,3,5,7,9,12,14,16,18,
+  19,21,23,25,27,30,32,34,36
+];
+
+const specialNumbers = [
+  28,
+  19,
+  0
+];
+
+const centerX =
+canvas.width / 2;
+
+const centerY =
+canvas.height / 2;
+
+const radius = 180;
+
+// DRAW
+function drawWheel(){
+
+  ctx.clearRect(
+    0,
+    0,
+    canvas.width,
+    canvas.height
+  );
+
+  const slice =
+  (2 * Math.PI)
+  / wheelNumbers.length;
+
+  for(let i=0; i<wheelNumbers.length; i++){
+
+    const number =
+    wheelNumbers[i];
+
+    const angle =
+    i * slice + rotation;
+
+    let color;
+
+    if(number === 0){
+
+      color = "#16a34a";
+
+    }else if(
+      redNumbers.includes(number)
+    ){
+
+      color = "#d7263d";
+
+    }else{
+
+      color = "#232a45";
+    }
+
+    ctx.beginPath();
+
+    ctx.moveTo(centerX, centerY);
+
+    ctx.arc(
+      centerX,
+      centerY,
+      radius,
+      angle,
+      angle + slice
+    );
+
+    ctx.fillStyle = color;
+
+    ctx.fill();
+
+    ctx.lineWidth = 2;
+
+    ctx.strokeStyle = "#151827";
+
+    ctx.stroke();
+
+    // number
+    ctx.save();
+
+    ctx.translate(centerX, centerY);
+
+    ctx.rotate(angle + slice / 2);
+
+    ctx.fillStyle = "white";
+
+    ctx.font = "bold 13px Arial";
+
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+      number,
+      radius - 35,
+      5
+    );
+
+    ctx.restore();
+  }
+
+  // CENTER
+  ctx.beginPath();
+
+  ctx.arc(
+    centerX,
+    centerY,
+    70,
+    0,
+    Math.PI * 2
+  );
+
+  ctx.fillStyle = "#20263b";
+
+  ctx.fill();
+}
+
+drawWheel();
+
+// CALCULATE
+function calculateNumber(num){
+
+  if(num < 10){
+    return num;
+  }
+
+  let total =
+  num
+  .toString()
+  .split("")
+  .reduce(
+    (a,b)=>a + Number(b),
+    0
+  );
+
+  total =
+  total.toString().slice(-1);
+
+  return Number(total);
+}
+
+// WINNER
+function getWinner(){
+
+  const slice =
+  360 / wheelNumbers.length;
+
+  let degrees =
+  rotation * 180 / Math.PI;
+
+  degrees =
+  (degrees % 360 + 360) % 360;
+
+  const pointerAngle = 270;
+
+  const adjusted =
+  (pointerAngle - degrees + 360)
+  % 360;
+
+  const index =
+  Math.floor(adjusted / slice);
+
+  return wheelNumbers[index];
+}
+
+// SPIN
+function spinWheel(){
+
+  if(spinning){
+    return;
+  }
+
+  const bet =
+  Number(
+    document.getElementById("betAmount")
+    .value
+  );
+
+  if(bet <= 0){
+    return;
+  }
+
+  if(bet > balance){
+
+    alert("Balance tidak cukup!");
+
+    return;
+  }
+
+  resultText.innerHTML = "";
+
+  playerScore.innerHTML = "";
+  houseScore.innerHTML = "";
+
+  balance -= bet;
+
+balanceText.innerHTML =
+balance;
+
+localStorage.setItem(
+  "rouletteBalance",
+  balance
+);
+  spinning = true;
+
+  addXP(
+  Math.floor(bet / 5)
+);
+
+  autoSpin(1, bet);
+}
+
+// DOUBLE SPIN
+function autoSpin(round, bet){
+
+  const extraRotation =
+  Math.floor(Math.random() * 3000)
+  + 5000;
+
+  const finalRotation =
+  rotation +
+  extraRotation * Math.PI / 180;
+
+  const duration =
+fastSpin
+? 1500
+: 7000;
+
+  const startRotation =
+  rotation;
+
+  const startTime =
+  performance.now();
+
+  function animate(now){
+
+    const elapsed =
+    now - startTime;
+
+    const progress =
+    Math.min(elapsed / duration, 1);
+
+    const easeOut =
+    1 -
+    Math.pow(1 - progress, 5);
+
+    rotation =
+    startRotation +
+    (finalRotation - startRotation)
+    * easeOut;
+
+    drawWheel();
+
+    if(progress < 1){
+
+      requestAnimationFrame(animate);
+
+    }else{
+
+      rotation = finalRotation;
+
+      const winner =
+getWinner();
+
+const result =
+calculateNumber(winner);
+
+// SIMPAN ANGKA ASLI
+if(round === 1){
+
+  playerWinnerNumber = winner;
+
+}else{
+
+  houseWinnerNumber = winner;
+}
+
+      // PLAYER
+      if(round === 1){
+
+        playerScore.innerHTML =
+        result;
+
+        setTimeout(()=>{
+
+          autoSpin(2, bet);
+
+        },1000);
+
+      }
+
+      // HOUSE
+      else{
+
+        houseScore.innerHTML =
+        result;
+
+        // MENANG / KALAH
+        
+        const playerWinner =
+Number(playerWinnerNumber);
+
+const houseWinner =
+Number(houseWinnerNumber);
+        
+        const player =
+        Number(
+          playerScore.innerHTML
+        );
+
+        const house =
+        Number(
+          houseScore.innerHTML
+        );
+
+        // SPECIAL HOUSE
+if(
+  specialNumbers.includes(houseWinner)
+){
+
+  resultText.innerHTML =
+  "HOUSE JACKPOT";
+
+  resultText.className =
+  "result-text lose";
+
+  historyData.unshift("0.00x");
+}
+
+// PLAYER WIN x3
+else if(
+  specialNumbers.includes(playerWinner)
+){
+
+  const win =
+  bet * 3;
+
+  balance += win;
+
+  balanceText.innerHTML =
+  balance;
+
+  localStorage.setItem(
+    "rouletteBalance",
+    balance
+  );
+
+  resultText.innerHTML =
+  "JACKPOT x3 +" + win;
+
+  resultText.className =
+  "result-text win";
+
+  historyData.unshift("3.00x");
+}
+
+// NORMAL WIN
+else if(player > house){
+
+  const win =
+  bet * 2;
+
+  balance += win;
+
+  balanceText.innerHTML =
+  balance;
+
+  localStorage.setItem(
+    "rouletteBalance",
+    balance
+  );
+
+  resultText.innerHTML =
+  "YOU WIN +" + win;
+
+  resultText.className =
+  "result-text win";
+
+  historyData.unshift("2.00x");
+}
+
+// LOSE
+else{
+
+  resultText.innerHTML =
+  "HOUSE WIN";
+
+  resultText.className =
+  "result-text lose";
+
+  historyData.unshift("0.00x");
+}
+
+localStorage.setItem(
+  "rouletteHistory",
+  JSON.stringify(historyData)
+);
+localStorage.setItem(
+  "rouletteHistory",
+  JSON.stringify(historyData)
+);
+
+        if(historyData.length > 10){
+
+          historyData.pop();
+        }
+
+        renderHistory();
+
+        spinning = false;
+      }
+    }
+  }
+
+  requestAnimationFrame(animate);
+}
+
+const betInput =
+document.getElementById("betAmount");
+
+// HALF
+function halfBet(){
+
+  let value =
+  Number(betInput.value);
+
+  value =
+  Math.floor(value / 2);
+
+  if(value < 1){
+    value = 1;
+  }
+
+  betInput.value = value;
+}
+
+// DOUBLE
+function doubleBet(){
+
+  let value =
+  Number(betInput.value);
+
+  value *= 2;
+
+  if(value > balance){
+    value = balance;
+  }
+
+  betInput.value = value;
+}
+
+// MAX
+function maxBet(){
+
+  betInput.value = balance;
+}
+
+// OPEN POPUP
+function openPromo(){
+
+  document
+  .getElementById("promoPopup")
+  .style.display = "flex";
+}
+
+// CLOSE POPUP
+function closePromo(){
+
+  document
+  .getElementById("promoPopup")
+  .style.display = "none";
+}
+
+// DATABASE PROMO
+const promoCodes = {
+
+  "YAZZBET": 500000,
+
+  "FREE100": 100000,
+
+  "WELCOME": 250000,
+
+  "CASEBET": 750000
+
+
+};
+
+// CLAIM PROMO
+function claimPromo(){
+
+  const promo =
+  document
+  .getElementById("promoInput")
+  .value
+  .toUpperCase();
+
+  // cek promo ada atau tidak
+  if(!promoCodes[promo]){
+
+    alert("Promo code salah!");
+
+    return;
+  }
+
+  // cek sudah dipakai
+  const alreadyUsed =
+  localStorage.getItem(
+    "promo_" + promo
+  );
+
+  if(alreadyUsed){
+
+    alert(
+      "Promo sudah digunakan!"
+    );
+
+    return;
+  }
+
+  // hadiah promo
+  const reward =
+  promoCodes[promo];
+
+  balance += reward;
+
+  balanceText.innerHTML =
+  balance;
+
+  // simpan balance
+  localStorage.setItem(
+    "rouletteBalance",
+    balance
+  );
+
+  // tandai sudah claim
+  localStorage.setItem(
+    "promo_" + promo,
+    "used"
+  );
+
+  alert(
+    "Promo berhasil! +" + reward
+  );
+
+  closePromo();
+}
+
+// UPDATE UI
+function updateLevelUI(){
+
+  const needXP =
+  level * 100;
+
+  document.getElementById(
+    "levelText"
+  ).innerHTML = level;
+
+  document.getElementById(
+    "xpText"
+  ).innerHTML = xp;
+
+  document.getElementById(
+    "xpNeed"
+  ).innerHTML = needXP;
+
+  const percent =
+  (xp / needXP) * 100;
+
+  document.getElementById(
+    "xpFill"
+  ).style.width =
+  percent + "%";
+
+  // SAVE
+  localStorage.setItem(
+    "rouletteLevel",
+    level
+  );
+
+  localStorage.setItem(
+    "rouletteXP",
+    xp
+  );
+}
+
+// ADD XP
+function addXP(amount){
+
+  xp += amount;
+
+  let needXP =
+  level * 100;
+
+  // LEVEL UP
+  while(xp >= needXP){
+
+    xp -= needXP;
+
+    level++;
+
+    needXP =
+    level * 100;
+
+    alert(
+      "LEVEL UP! LEVEL " + level
+    );
+  }
+
+  // SAVE
+  localStorage.setItem(
+    "rouletteXP",
+    xp
+  );
+
+  localStorage.setItem(
+    "rouletteLevel",
+    level
+  );
+
+  updateLevelUI();
+}
+
+// LOAD NAME
+document.getElementById(
+  "nameInput"
+).value = username;
+// cek lock name
+if(
+  localStorage.getItem(
+    "nameLocked"
+  )
+){
+
+  document.getElementById(
+    "nameInput"
+  ).disabled = true;
+}
+
+// SAVE NAME
+// SAVE NAME ONLY 1X
+function saveName(){
+
+  // cek sudah pernah save
+  const locked =
+  localStorage.getItem(
+    "nameLocked"
+  );
+
+  if(locked){
+
+    alert(
+      "Nama hanya bisa disimpan 1x!"
+    );
+
+    return;
+  }
+
+  const newName =
+  document
+  .getElementById("nameInput")
+  .value
+  .trim();
+
+  if(newName === ""){
+
+    alert("Masukkan nama!");
+
+    return;
+  }
+
+  // save username
+  username = newName;
+
+  document.getElementById(
+    "usernameText"
+  ).innerHTML = username;
+
+  localStorage.setItem(
+    "rouletteUsername",
+    username
+  );
+  // buat akun player
+if(!players[username]){
+
+  players[username] = {
+    balance: balance
+  };
+
+  localStorage.setItem(
+    "roulettePlayers",
+    JSON.stringify(players)
+  );
+}
+
+  // lock name
+  localStorage.setItem(
+    "nameLocked",
+    "yes"
+  );
+
+  // disable input
+  document.getElementById(
+    "nameInput"
+  ).disabled = true;
+
+  alert(
+    "Nama berhasil disimpan!"
+  );
+}
+
+// TOGGLE FAST SPIN
+function toggleFastSpin(){
+
+  fastSpin = !fastSpin;
+
+  const toggle =
+  document.getElementById(
+    "fastToggle"
+  );
+
+  if(fastSpin){
+
+    toggle.classList.add(
+      "active"
+    );
+
+  }else{
+
+    toggle.classList.remove(
+      "active"
+    );
+  }
+}
+// OPEN TIP
+function openTip(){
+
+  document
+  .getElementById("tipPopup")
+  .style.display = "flex";
+}
+
+// CLOSE TIP
+function closeTip(){
+
+  document
+  .getElementById("tipPopup")
+  .style.display = "none";
+}
+
+// SEND TIP
+function sendTip(){
+
+  const target =
+  document
+  .getElementById("tipName")
+  .value
+  .trim();
+
+  const amount =
+  Number(
+    document
+    .getElementById("tipAmount")
+    .value
+  );
+
+  // validasi
+  if(target === ""){
+
+    alert("Masukkan nama!");
+
+    return;
+  }
+
+  if(amount <= 0){
+
+    alert("Jumlah tidak valid!");
+
+    return;
+  }
+
+  if(amount > balance){
+
+    alert("Balance tidak cukup!");
+
+    return;
+  }
+
+  // player tidak ada
+  if(!players[target]){
+
+    alert("Player tidak ditemukan!");
+
+    return;
+  }
+
+  // tidak bisa tip diri sendiri
+  if(target === username){
+
+    alert("Tidak bisa tip diri sendiri!");
+
+    return;
+  }
+
+  // kurangi balance sendiri
+  balance -= amount;
+
+  // tambah balance target
+  players[target].balance += amount;
+
+  // save balance sendiri
+  balanceText.innerHTML =
+  balance;
+
+  localStorage.setItem(
+    "rouletteBalance",
+    balance
+  );
+
+  // save player db
+  localStorage.setItem(
+    "roulettePlayers",
+    JSON.stringify(players)
+  );
+
+  alert(
+    "Berhasil tip $" +
+    amount +
+    " ke " +
+    target
+  );
+
+  closeTip();
+}
+
+
+
+
+</script>
+
+<!-- TIP BUTTON -->
+<button
+class="promo-floating"
+style="
+bottom:90px;
+background:#2563eb;
+"
+onclick="openTip()">
+
+💸 Tip Player
+
+</button>
+
+<!-- TIP POPUP -->
+<div
+class="promo-popup-bg"
+id="tipPopup">
+
+  <div class="promo-popup">
+
+    <div class="promo-title">
+      💸 TIP PLAYER
+    </div>
+
+    <input
+    type="text"
+    id="tipName"
+    class="promo-input"
+    placeholder="Nama player">
+
+    <input
+    type="number"
+    id="tipAmount"
+    class="promo-input"
+    placeholder="Jumlah tip">
+
+    <button
+    class="promo-claim-btn"
+    onclick="sendTip()">
+
+      SEND TIP
+
+    </button>
+
+    <button
+    class="promo-close-btn"
+    onclick="closeTip()">
+
+      CLOSE
+
+    </button>
+
+  </div>
+
+</div>
+
+</body>
+
+
+</html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Casebet Mines</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#0f1320;
+  color:white;
+  overflow:hidden;
+}
+
+/* TOPBAR */
+.topbar{
+  width:100%;
+  height:70px;
+  background:#111526;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 25px;
+
+  border-bottom:3px solid #232a45;
+}
+
+.logo{
+  font-size:42px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.balance{
+  background:#1b2134;
+
+  padding:12px 22px;
+
+  border-radius:14px;
+
+  font-size:20px;
+  font-weight:bold;
+}
+
+/* HOME PAGE */
+.home-page{
+
+  width:100%;
+  height:100vh;
+
+  display:flex;
+
+  justify-content:center;
+  align-items:center;
+
+  background:#0f1320;
+}
+
+.home-card{
+
+  width:900px;
+  height:420px;
+
+  border-radius:35px;
+
+  background:
+  linear-gradient(
+    135deg,
+    #4f46e5,
+    #7c3aed
+  );
+
+  border:4px solid #8b5cf6;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+  align-items:center;
+
+  cursor:pointer;
+
+  transition:0.3s;
+
+  box-shadow:
+  0 0 50px rgba(124,58,237,0.5);
+}
+
+.home-card:hover{
+
+  transform:translateY(-8px);
+
+  box-shadow:
+  0 0 80px rgba(124,58,237,0.7);
+}
+
+.home-icon{
+  font-size:120px;
+}
+
+.home-title{
+  font-size:75px;
+  font-weight:bold;
+  margin-top:15px;
+}
+
+.home-sub{
+  margin-top:10px;
+  font-size:26px;
+  color:#ddd;
+}
+
+.play-btn{
+
+  margin-top:35px;
+
+  padding:18px 45px;
+
+  border:none;
+  border-radius:16px;
+
+  background:#16a34a;
+
+  color:white;
+
+  font-size:24px;
+  font-weight:bold;
+
+  cursor:pointer;
+}
+
+/* GAME */
+.game-page{
+  display:none;
+}
+
+.main{
+  display:flex;
+  height:calc(100vh - 70px);
+}
+
+/* SIDEBAR */
+.sidebar{
+
+  width:330px;
+
+  background:#121728;
+
+  padding:20px;
+
+  border-right:4px solid #232a45;
+}
+
+.tabs{
+
+  display:flex;
+
+  background:#1b2134;
+
+  border-radius:15px;
+
+  overflow:hidden;
+
+  margin-bottom:25px;
+}
+
+.tab{
+
+  flex:1;
+
+  padding:14px;
+
+  text-align:center;
+
+  font-weight:bold;
+}
+
+.active{
+  background:#6d28ff;
+}
+
+.bet-input{
+
+  width:100%;
+
+  padding:15px;
+
+  border:none;
+
+  border-radius:12px;
+
+  background:#1b2134;
+
+  color:white;
+
+  font-size:20px;
+
+  margin-bottom:15px;
+}
+
+.bet-controls{
+
+  display:flex;
+
+  gap:10px;
+
+  margin-bottom:20px;
+}
+
+.bet-controls button{
+
+  flex:1;
+
+  padding:12px;
+
+  border:none;
+
+  border-radius:10px;
+
+  background:#1b2134;
+
+  color:white;
+
+  cursor:pointer;
+}
+
+.bet-btn{
+
+  width:100%;
+
+  padding:18px;
+
+  border:none;
+
+  border-radius:14px;
+
+  background:#6d28ff;
+
+  color:white;
+
+  font-size:22px;
+  font-weight:bold;
+
+  cursor:pointer;
+
+  margin-top:20px;
+}
+
+.label{
+
+  margin-top:20px;
+  margin-bottom:10px;
+
+  color:#bbb;
+}
+
+/* RANGE */
+.range-box{
+  margin-bottom:20px;
+}
+
+.range-value{
+
+  text-align:center;
+
+  margin-top:10px;
+
+  font-size:20px;
+
+  font-weight:bold;
+}
+
+input[type=range]{
+
+  width:100%;
+}
+
+/* BOARD */
+.board-area{
+
+  flex:1;
+
+  display:flex;
+
+  justify-content:center;
+  align-items:center;
+
+  padding:30px;
+}
+
+#board{
+
+  display:grid;
+
+  gap:10px;
+}
+
+/* TILE */
+.tile{
+
+  width:65px;
+  height:65px;
+
+  background:#3b4568;
+
+  border-radius:12px;
+
+  display:flex;
+
+  justify-content:center;
+  align-items:center;
+
+  cursor:pointer;
+
+  font-size:30px;
+
+  transition:0.15s;
+
+  border:3px solid #47527a;
+}
+
+.tile:hover{
+  transform:translateY(-3px);
+}
+
+.safe{
+  background:#16a34a;
+}
+
+.mine{
+  background:#dc2626;
+}
+
+/* ========================= */
+/* RESPONSIVE MOBILE */
+/* ========================= */
+
+@media (max-width: 768px){
+
+  body{
+    overflow:auto;
+  }
+
+  /* TOPBAR */
+  .topbar{
+    height:auto;
+    padding:15px;
+    flex-wrap:wrap;
+    gap:10px;
+    justify-content:center;
+  }
+
+  .logo{
+    font-size:30px;
+  }
+
+  .balance{
+    font-size:16px;
+    padding:10px 15px;
+  }
+
+  .profile-box{
+    margin-left:0;
+    width:100%;
+  }
+
+  .name-box{
+    width:100%;
+    margin-left:0;
+    justify-content:center;
+  }
+
+  .name-box input{
+    width:100%;
+  }
+
+  /* HOME CARD */
+  .roulette-home-card,
+  .home-card{
+
+    width:100%;
+    height:auto;
+
+    padding:40px 20px;
+
+    border-radius:25px;
+  }
+
+  .roulette-big-icon,
+  .home-icon{
+    font-size:80px;
+  }
+
+  .roulette-home-title,
+  .home-title{
+    font-size:42px;
+    text-align:center;
+  }
+
+  .roulette-home-sub,
+  .home-sub{
+    font-size:18px;
+    text-align:center;
+  }
+
+  .play-now-btn,
+  .play-btn{
+    width:100%;
+    font-size:20px;
+  }
+
+  /* MAIN */
+  .main{
+    flex-direction:column;
+    height:auto;
+  }
+
+  /* SIDEBAR */
+  .sidebar{
+    width:100%;
+    border-right:none;
+    border-bottom:4px solid #232a45;
+  }
+
+  /* GAME AREA */
+  .game-area,
+  .board-area{
+    width:100%;
+    padding:15px;
+    overflow:auto;
+  }
+
+  /* ROULETTE */
+  .roulette-wrapper{
+    width:280px;
+    height:280px;
+  }
+
+  canvas{
+    width:100%;
+    height:100%;
+  }
+
+  .score-container{
+    position:relative;
+    flex-direction:column;
+    align-items:center;
+    gap:20px;
+
+    transform:none;
+    top:auto;
+
+    padding-top:20px;
+  }
+
+  .score-box{
+    width:110px;
+    height:110px;
+  }
+
+  .score-title{
+    font-size:20px;
+  }
+
+  .score-number{
+    font-size:45px;
+  }
+
+  .result-text{
+    position:relative;
+    bottom:auto;
+    left:auto;
+    transform:none;
+
+    margin-top:25px;
+
+    font-size:24px;
+  }
+
+  /* HISTORY */
+  .history{
+    overflow-x:auto;
+    padding-bottom:10px;
+  }
+
+  .history-box{
+    min-width:70px;
+    font-size:14px;
+  }
+
+  /* MINES BOARD */
+  #board{
+    gap:6px;
+    justify-content:center;
+  }
+
+  .tile{
+    width:42px;
+    height:42px;
+    font-size:20px;
+    border-radius:8px;
+  }
+
+  /* INPUT */
+  .bet-input{
+    font-size:18px;
+  }
+
+  .bet-btn{
+    font-size:18px;
+    padding:15px;
+  }
+
+  /* FLOATING BUTTON */
+  .promo-floating{
+    left:10px;
+    bottom:10px;
+
+    font-size:14px;
+    padding:12px 14px;
+  }
+
+  /* POPUP */
+  .promo-popup{
+    width:92%;
+    padding:20px;
+  }
+
+  .promo-title{
+    font-size:22px;
+  }
+
+  .promo-input{
+    font-size:16px;
+  }
+
+}
+
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="home-page" id="homePage">
+
+  <div
+  class="home-card"
+  onclick="startGamePage()">
+
+    <div class="home-icon">
+      💣
+    </div>
+
+    <div class="home-title">
+      MINES
+    </div>
+
+    <div class="home-sub">
+      Casebet Original Game
+    </div>
+
+    <button class="play-btn">
+      PLAY NOW
+    </button>
+
+  </div>
+
+</div>
+
+<!-- GAME -->
+<div class="game-page" id="gamePage">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+
+    <div
+    class="logo"
+    onclick="goHome()">
+
+      Casebet
+
+    </div>
+
+<html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Original Mines</title>
+
+<style>
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+  background:#0f1320;
+  color:white;
+  overflow:hidden;
+}
+
+/* TOPBAR */
+.topbar{
+  width:100%;
+  height:70px;
+  background:#111526;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:0 25px;
+
+  border-bottom:3px solid #232a45;
+}
+
+.logo{
+  font-size:42px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.balance{
+  background:#1b2134;
+
+  padding:12px 22px;
+
+  border-radius:14px;
+
+  font-size:20px;
+  font-weight:bold;
+}
+
+/* HOME PAGE */
+.home-page{
+
+  width:100%;
+  height:100vh;
+
+  display:flex;
+
+  justify-content:center;
+  align-items:center;
+
+  background:#0f1320;
+}
+
+.home-card{
+
+  width:900px;
+  height:420px;
+
+  border-radius:35px;
+
+  background:
+  linear-gradient(
+    135deg,
+    #4f46e5,
+    #7c3aed
+  );
+
+  border:4px solid #8b5cf6;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:center;
+  align-items:center;
+
+  cursor:pointer;
+
+  transition:0.3s;
+
+  box-shadow:
+  0 0 50px rgba(124,58,237,0.5);
+}
+
+.home-card:hover{
+
+  transform:translateY(-8px);
+
+  box-shadow:
+  0 0 80px rgba(124,58,237,0.7);
+}
+
+.home-icon{
+  font-size:120px;
+}
+
+.home-title{
+  font-size:75px;
+  font-weight:bold;
+  margin-top:15px;
+}
+
+.home-sub{
+  margin-top:10px;
+  font-size:26px;
+  color:#ddd;
+}
+
+.play-btn{
+
+  margin-top:35px;
+
+  padding:18px 45px;
+
+  border:none;
+  border-radius:16px;
+
+  background:#16a34a;
+
+  color:white;
+
+  font-size:24px;
+  font-weight:bold;
+
+  cursor:pointer;
+}
+
+/* GAME */
+.game-page{
+  display:none;
+}
+
+.main{
+  display:flex;
+  height:calc(100vh - 70px);
+}
+
+/* SIDEBAR */
+.sidebar{
+
+  width:330px;
+
+  background:#121728;
+
+  padding:20px;
+
+  border-right:4px solid #232a45;
+}
+
+.tabs{
+
+  display:flex;
+
+  background:#1b2134;
+
+  border-radius:15px;
+
+  overflow:hidden;
+
+  margin-bottom:25px;
+}
+
+.tab{
+
+  flex:1;
+
+  padding:14px;
+
+  text-align:center;
+
+  font-weight:bold;
+}
+
+.active{
+  background:#6d28ff;
+}
+
+.bet-input{
+
+  width:100%;
+
+  padding:15px;
+
+  border:none;
+
+  border-radius:12px;
+
+  background:#1b2134;
+
+  color:white;
+
+  font-size:20px;
+
+  margin-bottom:15px;
+}
+
+.bet-controls{
+
+  display:flex;
+
+  gap:10px;
+
+  margin-bottom:20px;
+}
+
+.bet-controls button{
+
+  flex:1;
+
+  padding:12px;
+
+  border:none;
+
+  border-radius:10px;
+
+  background:#1b2134;
+
+  color:white;
+
+  cursor:pointer;
+}
+
+.bet-btn{
+
+  width:100%;
+
+  padding:18px;
+
+  border:none;
+
+  border-radius:14px;
+
+  background:#6d28ff;
+
+  color:white;
+
+  font-size:22px;
+  font-weight:bold;
+
+  cursor:pointer;
+
+  margin-top:20px;
+}
+
+.label{
+
+  margin-top:20px;
+  margin-bottom:10px;
+
+  color:#bbb;
+}
+
+/* RANGE */
+.range-box{
+  margin-bottom:20px;
+}
+
+.range-value{
+
+  text-align:center;
+
+  margin-top:10px;
+
+  font-size:20px;
+
+  font-weight:bold;
+}
+
+input[type=range]{
+
+  width:100%;
+}
+
+/* BOARD */
+.board-area{
+
+  flex:1;
+
+  display:flex;
+
+  justify-content:center;
+  align-items:center;
+
+  padding:30px;
+}
+
+#board{
+
+  display:grid;
+
+  gap:10px;
+}
+
+/* TILE */
+.tile{
+
+  width:65px;
+  height:65px;
+
+  background:#3b4568;
+
+  border-radius:12px;
+
+  display:flex;
+
+  justify-content:center;
+  align-items:center;
+
+  cursor:pointer;
+
+  font-size:30px;
+
+  transition:0.15s;
+
+  border:3px solid #47527a;
+}
+
+.tile:hover{
+  transform:translateY(-3px);
+}
+
+.safe{
+  background:#16a34a;
+}
+
+.mine{
+  background:#dc2626;
+}
+
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="home-page" id="homePage">
+
+  <div
+  class="home-card"
+  onclick="startGamePage()">
+
+    <div class="home-icon">
+      💣
+    </div>
+
+    <div class="home-title">
+      MINES
+    </div>
+
+    <div class="home-sub">
+      Casebet Original Game
+    </div>
+
+    <button class="play-btn">
+      PLAY NOW
+    </button>
+
+  </div>
+
+</div>
+
+<!-- GAME -->
+<div class="game-page" id="gamePage">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+
+    <div
+    class="logo"
+    onclick="goHome()">
+
+      Yazz
+
+    </div>
+
+    <div class="balance">
+      💰 $<span id="balance">1000</span>
+    </div>
+
+  </div>
+
+  <div class="main">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+
+      <div class="tabs">
+
+        <div class="tab active">
+          Manual
+        </div>
+
+        <div class="tab">
+          Auto
+        </div>
+
+      </div>
+
+      <input
+      type="number"
+      id="betInput"
+      class="bet-input"
+      value="50">
+
+      <div class="bet-controls">
+
+        <button onclick="halfBet()">
+          1/2
+        </button>
+
+        <button onclick="doubleBet()">
+          x2
+        </button>
+
+        <button onclick="maxBet()">
+          Max
+        </button>
+
+      </div>
+
+      <!-- GRID -->
+      <div class="range-box">
+
+        <div class="label">
+          GRID SIZE
+        </div>
+
+        <input
+        type="range"
+        min="5"
+        max="10"
+        value="5"
+        id="gridSlider"
+        oninput="updateGridText()">
+
+        <div
+        class="range-value"
+        id="gridText">
+
+          5 x 5
+
+        </div>
+
+      </div>
+
+      <!-- MINES -->
+      <div class="range-box">
+
+        <div class="label">
+          AMOUNT OF MINES
+        </div>
+
+        <input
+        type="range"
+        min="1"
+        max="24"
+        value="5"
+        id="mineSlider"
+        oninput="updateMineText()">
+
+        <div
+        class="range-value"
+        id="mineText">
+
+          5
+
+        </div>
+
+      </div>
+
+      <button
+      class="bet-btn"
+      onclick="startMines()">
+
+        BET
+
+      </button>
+
+    </div>
+
+    <!-- BOARD -->
+    <div class="board-area">
+
+      <div id="board"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+
+
+
